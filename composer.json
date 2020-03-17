@@ -1,6 +1,6 @@
 {
   "name": "abel.tang/consul-php-sdk",
-  "description": "加密解密",
+  "description": "Consul PHP SDK",
   "license": "MIT",
   "authors": [
     {
