@@ -14,8 +14,16 @@ use SensioLabs\Consul\ServiceFactory;
  */
 class Consul
 {
+    private $baseUri = '';
+    private $token = '';
 
-    public function get($baseUri = 'http://10.10.10.4:8500', $token = '', $hostName = '')
+    public function __construct($url = 'http://10.10.10.4:8500', $token = '')
+    {
+        $this->baseUri = $url;
+        $this->token = $token;
+    }
+
+    public function get($hostName = '')
     {
         try {
             if (empty($hostName)) {
@@ -29,7 +37,10 @@ class Consul
             if (!empty($dataList) && is_array($dataList)) {
                 return $dataList;
             }
-            $sf = new ServiceFactory(['base_uri' => $baseUri, 'headers' => ['X-Consul-Token' => $token]]);
+            $sf = new ServiceFactory([
+                'base_uri' => $this->baseUri,
+                'headers' => ['X-Consul-Token' => $this->token]
+            ]);
             $kv = $sf->get('kv');
             $val = $kv->get('config', ['keys' => true]);
             $data = $val->json();
@@ -42,9 +53,8 @@ class Consul
                     $dataList[$tmpStr] = $result;
                 }
             }
-            @mkdir("/gaodun/cache/" . $_SERVER['HTTP_HOST']);
+            @mkdir("/gaodun/cache/" . $hostName);
             file_put_contents($path, serialize($dataList));
-
             return $dataList;
         } catch (\Exception $e) {
             echo $e->getMessage();
