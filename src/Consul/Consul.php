@@ -23,10 +23,10 @@ class Consul
         $this->token = $token;
     }
 
-    public function get($hostName = '')
+    public function get($hostName = 'Cli')
     {
         try {
-            if (empty($hostName)) {
+            if (!$this->is_cli()) {
                 $hostName = $_SERVER['HTTP_HOST'];
             }
             $dataList = '';
@@ -60,4 +60,10 @@ class Consul
             echo $e->getMessage();
         }
     }
+
+    private function is_cli()
+    {
+        return preg_match("/cli/i", php_sapi_name()) ? true : false;
+    }
+
 }
