@@ -16,6 +16,7 @@ class Consul
 {
     private $baseUri = '';
     private $token = '';
+    private $path = '/gaodun/cache';
 
     public function __construct($url = 'http://10.10.10.4:8500', $token = '')
     {
@@ -29,8 +30,9 @@ class Consul
             if (!$this->is_cli()) {
                 $hostName = $_SERVER['HTTP_HOST'];
             }
+            $this->checkDir();
             $dataList = '';
-            $path = "/gaodun/cache/" . $hostName . "/consul.php";
+            $path = $this->path.'/' . $hostName . "/consul.php";
             if (is_file($path)) {
                 $dataList = unserialize(@file_get_contents($path));
             }
@@ -53,7 +55,7 @@ class Consul
                     $dataList[$tmpStr] = $result;
                 }
             }
-            @mkdir("/gaodun/cache/" . $hostName);
+            @mkdir($this->path.'/' . $hostName);
             file_put_contents($path, serialize($dataList));
             return $dataList;
         } catch (\Exception $e) {
@@ -66,4 +68,12 @@ class Consul
         return preg_match("/cli/i", php_sapi_name()) ? true : false;
     }
 
+    /**
+     * 检查目录是否存在
+     */
+    private function checkDir(){
+        if (!is_dir($this->path)){
+            $this->path = '/tmp';
+        }
+    }
 }
