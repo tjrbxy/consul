@@ -6,7 +6,7 @@
 
 namespace Consul;
 
-use SensioLabs\Consul\ServiceFactory;
+use Consul\Services\KV;
 
 /**
  * Class Consul
@@ -39,11 +39,7 @@ class Consul
             if (!empty($dataList) && is_array($dataList)) {
                 return $dataList;
             }
-            $sf = new ServiceFactory([
-                'base_uri' => $this->baseUri,
-                'headers' => ['X-Consul-Token' => $this->token]
-            ]);
-            $kv = $sf->get('kv');
+            $kv = new KV();
             $val = $kv->get('config', ['keys' => true]);
             $data = $val->json();
             $dataList = [];

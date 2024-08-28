@@ -11,7 +11,7 @@
   "require": {
     "php": ">7.2",
 	"guzzlehttp/guzzle": "^7.9",
-    "sensiolabs/consul-php-sdk": "^5.1"
+    "friendsofphp/consul-php-sdk": "^5.1"
   },
   "autoload": {
     "psr-4": {
